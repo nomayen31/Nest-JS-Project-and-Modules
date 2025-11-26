@@ -9,7 +9,14 @@ export class UsersService {
       { id: 3, name: 'Bob', age: 35, email: 'bob@example.com', isAdmin: true },
     ];
 
-  getAllUsers() {
+ getAllUsers(query: { email?: string }) {
+    const { email } = query;
+
+    if (email) {
+      return this.users.filter(user => user.email === email);
+    }
+
+    // If no email provided → return all
     return this.users;
   }
 
