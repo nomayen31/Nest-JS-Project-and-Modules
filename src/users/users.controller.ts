@@ -30,6 +30,7 @@ export class UsersController {
     // ✔ POST /users → create user
     @Post()
     createUser(@Body() user: CreateUserDto) {
+        console.log(user instanceof CreateUserDto);
         return this.usersService.createUser(user);
     }
 }
