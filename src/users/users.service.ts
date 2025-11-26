@@ -13,13 +13,13 @@ export class UsersService {
     return this.users;
   }
 
-  getUserById(id: number) {
+  getUserById(id: any) {
     const user = this.users.find((u) => u.id === id);
     if (!user) throw new NotFoundException(`User with id ${id} not found`);
     return user;
   }
 
-  createUser(user: { id?: number; name: string; age: number; email: string; isAdmin: boolean }) {
+  createUser(user: { id?: any; name: string; age: number; email: string; isAdmin: boolean }) {
     // auto-generate id if not provided
     const newId = user.id ?? (this.users.length ? Math.max(...this.users.map((u) => u.id)) + 1 : 1);
     const newUser = { id: newId, ...user };
