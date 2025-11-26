@@ -9,23 +9,19 @@ export class UsersService {
             { id: 3, name: 'Bob', gender: 'male', age: 35, email: 'bob@example.com', isAdmin: true },
         ];
 
-    getAllUsers(limit?: number, page?: number) {
-        // If no pagination → return all users
-        if (!limit || !page) {
-            return this.users;
-        }
+    getAllUsers(limit?: number, page?: number, isAdmin?: boolean) {
+        let data = this.users;
+        if (typeof isAdmin === 'boolean') data = data.filter(u => u.isAdmin === isAdmin);
 
-        const startIndex = (page - 1) * limit;
-        const endIndex = startIndex + limit;
+        if (!limit || !page) return data;
 
-        const paginatedData = this.users.slice(startIndex, endIndex);
-
+        const start = (page - 1) * limit;
         return {
             page,
             limit,
-            totalUsers: this.users.length,
-            totalPages: Math.ceil(this.users.length / limit),
-            data: paginatedData,
+            totalUsers: data.length,
+            totalPages: Math.ceil(data.length / limit),
+            data: data.slice(start, start + limit),
         };
     }
 
@@ -37,10 +33,10 @@ export class UsersService {
     }
 
     createUser(user: { id?: number; name: string; gender?: string; age: number; email: string; isAdmin: boolean }) {
-        // auto-generate id if not provided
         const newId = user.id ?? (this.users.length ? Math.max(...this.users.map((u) => u.id)) + 1 : 1);
         const newUser = { id: newId, gender: user.gender ?? 'not specified', ...user };
         this.users.push(newUser);
         return { message: 'User Created Successfully', user: newUser };
     }
+   
 }

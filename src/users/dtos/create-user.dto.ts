@@ -1,8 +1,9 @@
 import { IsBoolean, IsEmail, IsNotEmpty, IsNumber, IsOptional, IsString, MinLength } from "class-validator";
 
 export class CreateUserDto {
-    @IsNumber({},{ message: 'Id must be a number' })
-    id: number;
+    @IsNumber({}, { message: 'Id must be a number' })
+    @IsOptional()
+    id?: number;
 
     @IsString({ message: 'Name must be a string' })
     @IsNotEmpty({ message: 'Name is required' })
@@ -13,12 +14,12 @@ export class CreateUserDto {
     @IsOptional()
     gender?: string;
 
-    @IsNumber({},{ message: 'Age must be a number' })
+    @IsNumber({}, { message: 'Age must be a number' })
     age: number;
 
-    @IsEmail({},{ message: 'Email must be a valid email address' })
+    @IsEmail({}, { message: 'Email must be a valid email address' })
     email: string;
 
     @IsBoolean({ message: 'Admin status must be a boolean' })
-    isAdmin: boolean
+    isAdmin: boolean;
 }
