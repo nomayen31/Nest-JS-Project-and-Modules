@@ -1,5 +1,6 @@
-import { Controller, Get, Post, Param, Body, ParseIntPipe, Query, DefaultValuePipe } from '@nestjs/common';
+import { Controller, Get, Post, Param, Body, ParseIntPipe, Query, DefaultValuePipe, ValidationPipe } from '@nestjs/common';
 import { UsersService } from './users.service';
+import { CreateUserDto } from './dtos/create-user.dto';
 
 @Controller('users')
 export class UsersController {
@@ -14,8 +15,8 @@ export class UsersController {
     // ✔ GET /users → return paginated users (limit + page)
     @Get()
     getPaginatedUsers(
-        @Query('limit',new DefaultValuePipe(10), ParseIntPipe) limit: number,
-        @Query('page',new DefaultValuePipe(1), ParseIntPipe) page: number,
+        @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
+        @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
     ) {
         return this.usersService.getAllUsers(limit, page);
     }
@@ -28,10 +29,7 @@ export class UsersController {
 
     // ✔ POST /users → create user
     @Post()
-    createUser(
-        @Body()
-        user: { id?: number; name: string; age: number; email: string; isAdmin: boolean },
-    ) {
+    createUser(@Body(new ValidationPipe({ transform: true })) user: CreateUserDto) {
         return this.usersService.createUser(user);
     }
 }
