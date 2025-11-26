@@ -1,24 +1,32 @@
-import { Controller, Get, Post, Param, Body, ParseIntPipe, Query } from '@nestjs/common';
+import { Controller, Get, Post, Param, Body, ParseIntPipe, Query, DefaultValuePipe } from '@nestjs/common';
 import { UsersService } from './users.service';
 
 @Controller('users')
 export class UsersController {
     constructor(private readonly usersService: UsersService) { }
 
-    // GET /users
-    @Get()
-    getAllUsers(@Query() query: { email?: string }) {
-        console.log("Query: ", query);
-        return this.usersService.getAllUsers(query);
+    // ✔ GET /users/all → return all users (no pagination)
+    @Get('all')
+    getAllUsersNoPagination() {
+        return this.usersService.getAllUsers();
     }
 
-    // GET /users/:id
+    // ✔ GET /users → return paginated users (limit + page)
+    @Get()
+    getPaginatedUsers(
+        @Query('limit',new DefaultValuePipe(10), ParseIntPipe) limit: number,
+        @Query('page',new DefaultValuePipe(1), ParseIntPipe) page: number,
+    ) {
+        return this.usersService.getAllUsers(limit, page);
+    }
+
+    // ✔ GET /users/:id → get single user
     @Get(':id')
-    getUserById(@Param('id', ParseIntPipe) id: any) {
+    getUserById(@Param('id', ParseIntPipe) id: number) {
         return this.usersService.getUserById(id);
     }
 
-    // POST /users
+    // ✔ POST /users → create user
     @Post()
     createUser(
         @Body()
